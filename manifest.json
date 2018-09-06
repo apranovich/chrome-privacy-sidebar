@@ -1,0 +1,36 @@
+{
+    "name": "Forge Privacy Sidebar",
+    "version": "1.0.0",
+    "permissions": [
+        "alarms",
+        "contextMenus",
+        "tabs",
+        "storage",
+        "activeTab",
+        "webNavigation",
+        "webRequestBlocking",
+        "webRequest",
+        "<all_urls>",
+        "management",
+        "topSites",
+        "history",
+        "downloads",
+        "cookies",
+        "privacy"
+    ],
+    "background": {
+        "scripts": [
+            "dist/background.bundle.js"
+        ]
+    },
+    "content_scripts": [
+      {
+        "matches": [ "*://*.mysearch.com/*" ],
+        "js" : [ "dist/contentscript.bundle.js" ],
+        "css": [ "dist/contentscript.css" ],
+        "run_at": "document_end",
+        "all_frames": true
+      }
+    ],
+    "manifest_version": 2
+  }
