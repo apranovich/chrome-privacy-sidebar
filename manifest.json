@@ -16,7 +16,8 @@
         "history",
         "downloads",
         "cookies",
-        "privacy"
+        "privacy",
+        "browsingData"
     ],
     "background": {
         "scripts": [

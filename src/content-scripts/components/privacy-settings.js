@@ -11,9 +11,9 @@ export default class PrivacySettingsComponent extends Component {
         const privacySettings = this.store.state.privacy;
         this.element.innerHTML = `
             <div id="privacy-settings">
-                <div>Privacy Settings</div>
+                <h1>Privacy Settings</h1>
                 ${Object.keys(privacySettings).map(key => 
-                    `<div>
+                    `<div class="settingsItem">
                         ${ privacySettings[key].label }
                         <label class="switch">
                             <input type="checkbox" data-key="${ key }" ${ privacySettings[key].value ? 'checked' : '' }>

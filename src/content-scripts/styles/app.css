@@ -131,8 +131,11 @@ input:checked+.slider:before {
     border-radius: 50%;
 }
 
-#appRoot {
-    display: flex;
+#privacy-settings, #manage-history {
+    padding: 10px;
+}
+#privacy-settings > .settingsItem {
+    padding: 5px 15px;
 }
 
 .cross-link-btn {

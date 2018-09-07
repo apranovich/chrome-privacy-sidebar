@@ -15,7 +15,7 @@ const addListeners = (sidebar, store) => {
 	const historyBtn = document.getElementById("manage-history-btn");
 	const closeBtn = document.getElementById("sidebar-close");
 
-	const showSidebar = () => sidebar.style.width = "250px";
+	const showSidebar = () => sidebar.style.width = "300px";
 	const hideSidebar = () => sidebar.style.width = "0px";
 
 	privacyBtn.addEventListener('click', () => {

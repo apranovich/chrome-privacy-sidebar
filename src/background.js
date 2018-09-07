@@ -25,10 +25,6 @@
                 changes.forgeSettings.newValue.privacy,
                 changes.forgeSettings.oldValue ? changes.forgeSettings.oldValue.privacy : {}
             )
-            const historySettingsChanges = shallowDiff(
-                changes.forgeSettings.newValue.history,
-                changes.forgeSettings.oldValue ? changes.forgeSettings.oldValue.history : {}
-            )
 
             if('sendDNT' in privacySettingsChanges) {
                 setChromePrivacySetting('doNotTrackEnabled', privacySettingsChanges.sendDNT);
@@ -36,6 +32,30 @@
             if('blockCookies' in privacySettingsChanges) {
                 setChromePrivacySetting('thirdPartyCookiesAllowed', !privacySettingsChanges.blockCookies);
             }
+        }
+    });
+
+    chrome.runtime.onMessage.addListener((message, sender) => {
+        if(message.action === 'removeBrowsingData' && /hp.mysearch/.test(sender.url)) {
+            const millisecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
+
+            let since = 0; // stands for 'all time'
+            switch(message.options.clearSince) {
+                case '4w':
+                    since = (new Date()).getTime() - 4 * millisecondsPerWeek;
+                    break;
+                case '7d':
+                    since = (new Date()).getTime() - millisecondsPerWeek;
+                    break;
+                case '24h':
+                    since = (new Date()).getTime() - millisecondsPerWeek / 7;
+                    break;
+                case '1h':
+                    since = (new Date()).getTime() - millisecondsPerWeek / (7 * 24);
+                    break;
+            }
+            const itemsToClear = message.options.itemsToBeCleared.reduce((obj, item) => ({ ...obj, [item]: true }), {});
+            chrome.browsingData.remove({ since }, { ...itemsToClear });
         }
     });
 

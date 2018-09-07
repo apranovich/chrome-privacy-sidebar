@@ -29,5 +29,16 @@ export const initialState = {
             label: 'Incognito mode'
         }                                                
     },
-    history: {}
+    history: {
+        clearSince: 'all', // 4w, 7d, 24h, 1h
+        itemsToBeCleared: [
+            'history',
+            'downloads',
+            'cookies',
+            'cache',
+            'passwords',
+            'formData'
+        ]
+    },
+    sidebarPage: ''
 };
