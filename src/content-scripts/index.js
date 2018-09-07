@@ -1,9 +1,7 @@
 import storePromise from './store';
-import { htmlTemplateToDOMElement, getBody } from './app/utils';
-import { topRightButtons } from './app/template';
-import Sidebar from './app/sidebar';
-import PrivacySettingsComponent from './components/privacy-settings';
-import ManageHistoryComponent from './components/manage-history';
+import { htmlTemplateToDOMElement, inject, getBody } from './app/utils';
+import { topRightButtons, sidebarContainerTemplate } from './app/template';
+import SidebarContainer from './components/sidebar';
 
 const addAdditionalWTTButtons = () => {
 	const body = getBody();
@@ -12,39 +10,41 @@ const addAdditionalWTTButtons = () => {
 	body.appendChild(wttTopRightButtons);
 }
 
-const addListeners = (sidebarContainer, privacySettingsComponent, manageHistoryComponent) => {
+const addListeners = (sidebar, store) => {
 	const privacyBtn = document.getElementById("privacy-settings-btn");
 	const historyBtn = document.getElementById("manage-history-btn");
 	const closeBtn = document.getElementById("sidebar-close");
 
+	const showSidebar = () => sidebar.style.width = "250px";
+	const hideSidebar = () => sidebar.style.width = "0px";
+
 	privacyBtn.addEventListener('click', () => {
-		sidebarContainer.open();
-		privacySettingsComponent.render();
+		showSidebar();
+		store.dispatch('openSidebar', { newPage: 'privacy' });
 	});
 	historyBtn.addEventListener('click', () => {
-		sidebarContainer.open();
-		manageHistoryComponent.render();
+		showSidebar();
+		store.dispatch('openSidebar', { newPage: 'history' });
 	});
 	closeBtn.addEventListener('click', () => {
-		sidebarContainer.close();
+		hideSidebar();
 	});
+}
+
+const injectSidebar = (root) => {
+	const sidebarDOM = htmlTemplateToDOMElement(sidebarContainerTemplate);
+	inject(root, sidebarDOM);
+	return sidebarDOM;
 }
 
 const start = async () => {
 	addAdditionalWTTButtons();
-	const sidebarContainer = new Sidebar(getBody());
-	sidebarContainer.render();
+	const sidebar = injectSidebar(getBody());
 
 	const store = await storePromise;
-	
-	const privacySettingsComponent = new PrivacySettingsComponent(store);
-	const manageHistoryComponent = new ManageHistoryComponent(store);
-	addListeners(sidebarContainer, privacySettingsComponent, manageHistoryComponent);
+	new SidebarContainer(store);
+
+	addListeners(sidebar, store);
 }
 
 start();
-
-chrome.runtime.sendMessage({
-	from: 'content',
-	subject: 'showPageAction'
-  });

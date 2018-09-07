@@ -20,7 +20,7 @@ export default class Store {
         return new Store({ state, actions })
     }
 
-    dispatch(actionKey, payload, initiator) {
+    dispatch(actionKey, payload, initiator='') {
         const desiredAction = this.actions[actionKey];
         if (!desiredAction) {
             console.log(`Action ${actionKey} doesn't exist.`)

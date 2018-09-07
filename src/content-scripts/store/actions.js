@@ -9,9 +9,9 @@ const togglePrivacyPreference = (state, { key, value }) => ({
     history: { ...state.history }
 });
 
-const openPage = (state, { newPage }) => ({
+const openSidebar = (state, { newPage }) => ({
     ...state,
-    openedPage: newPage
+    sidebarPage: newPage
 })
 
-export { togglePrivacyPreference };
+export { togglePrivacyPreference, openSidebar };

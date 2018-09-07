@@ -32,5 +32,9 @@ export default class PrivacySettingsComponent extends Component {
                 this.store.dispatch('togglePrivacyPreference', { key, value: e.target.checked }, this.initiator)
             });
         });
+
+        const manageHistoryBtn = this.element.querySelector('button.cross-link-btn.manage-history-btn');
+        manageHistoryBtn && manageHistoryBtn.addEventListener('click', () =>
+            this.store.dispatch('openSidebar', { newPage: 'history' }));
     }
 }

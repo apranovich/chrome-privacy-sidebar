@@ -1,7 +1,7 @@
 export const sidebarContainerTemplate = `
-    <div id="sidebar" class="sidebar">
+    <div class="sidebar">
         <a id="sidebar-close" class="closebtn">&times;</a>
-        <div id="appRoot"></div>
+        <div id="sidebarContainer"></div>
     </div>
 `;
 
