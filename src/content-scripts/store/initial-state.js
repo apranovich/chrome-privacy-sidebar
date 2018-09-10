@@ -37,7 +37,9 @@ export const initialState = {
             'cookies',
             'cache',
             'passwords',
-            'formData'
+            'formData',
+            'appcache',
+            'localStorage'
         ]
     },
     sidebarPage: ''

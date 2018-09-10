@@ -23,6 +23,53 @@ export default class ManageHistoryComponent extends Component {
         ]
     }
 
+    addAdditionalOptions(checkedValue) {
+        // some UI options cover more than one option from Chrome API perspective
+        if ( checkedValue === 'cookies' )
+            return [ checkedValue, 'localStorage' ];
+        else if ( checkedValue === 'cache' )
+            return [ checkedValue, 'appcache' ];
+
+        return [ checkedValue ];
+    }
+
+    addClearBrowsingDataListener(itemsToBeCleared, clearSince) {
+        const clearBrowsingDataBtn = this.element.querySelector('.clear-browsing-data');
+        clearBrowsingDataBtn && clearBrowsingDataBtn.addEventListener('click', () => {
+            if ( confirm('Are you sure you want to clear browsing data?') ) {
+                chrome.runtime.sendMessage({ action: 'removeBrowsingData', options: { itemsToBeCleared, clearSince } },
+                    () => alert('Successfully cleared!'));
+            }
+        });
+    }
+
+    addClearSinceTimeframeListener() {
+        const timeframesDropdown = this.element.querySelector('#timeframes');
+        timeframesDropdown.addEventListener("change", (e) => {
+            this.store.dispatch('selectClearTimeframe', { clearSince: e.target.value });
+        });
+    }
+
+    addBrowsingDataToBeClearedListener() {
+        const clearOptionsCheckboxes = this.element.querySelectorAll("input[type='checkbox']");
+        [...clearOptionsCheckboxes].forEach(checkbox => {
+            checkbox.addEventListener("change", (e) => {
+                const items = this.addAdditionalOptions(e.target.value);
+                if (e.target.checked) {
+                    this.store.dispatch('addItemToClear', items)
+                } else {
+                    this.store.dispatch('removeItemToClear', items);
+                }
+            });
+        });
+    }
+
+    addPrivacySettingsLinkListener() {
+        const privacySettingsBtn = this.element.querySelector('button.cross-link-btn.privacy-settings-btn');
+        privacySettingsBtn && privacySettingsBtn.addEventListener('click', () =>
+            this.store.dispatch('openSidebar', { newPage: 'privacy' }));
+    }
+
     render() {
         const clearSince = this.store.state.history.clearSince;;
         const itemsToBeCleared = this.store.state.history.itemsToBeCleared;;
@@ -53,32 +100,9 @@ export default class ManageHistoryComponent extends Component {
             </div>
         `;
 
-        const timeframesDropdown = this.element.querySelector('#timeframes');
-        timeframesDropdown.addEventListener("change", (e) => {
-            this.store.dispatch('selectClearTimeframe', { clearSince: e.target.value });
-        });
-
-        const clearOptionsCheckboxes = this.element.querySelectorAll("input[type='checkbox']");
-        [...clearOptionsCheckboxes].forEach(checkbox => {
-            checkbox.addEventListener("change", (e) => {
-                if (e.target.checked) {
-                    this.store.dispatch('addItemToClear', { item: e.target.value })
-                } else {
-                    this.store.dispatch('removeItemToClear', { item: e.target.value })
-                }
-            });
-        });
-        
-        const clearBrowsingDataBtn = this.element.querySelector('.clear-browsing-data');
-        clearBrowsingDataBtn && clearBrowsingDataBtn.addEventListener('click', () => {
-            if ( confirm('Are you sure you want to clear browsing data?') ) {
-                chrome.runtime.sendMessage({ action: 'removeBrowsingData', options: { itemsToBeCleared, clearSince } },
-                    () => alert('Successfully cleared!'));
-            }
-        });
-
-        const privacySettingsBtn = this.element.querySelector('button.cross-link-btn.privacy-settings-btn');
-        privacySettingsBtn && privacySettingsBtn.addEventListener('click', () =>
-            this.store.dispatch('openSidebar', { newPage: 'privacy' }));
+        this.addClearSinceTimeframeListener();
+        this.addBrowsingDataToBeClearedListener();
+        this.addClearBrowsingDataListener(itemsToBeCleared, clearSince);
+        this.addPrivacySettingsLinkListener();
     }
 }

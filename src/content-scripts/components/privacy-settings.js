@@ -7,6 +7,22 @@ export default class PrivacySettingsComponent extends Component {
         super(store, element, componentName);
     }
 
+    addPrivacySettingsListeners() {
+        const privacyTogglers = this.element.querySelectorAll("input[type='checkbox']");
+        [...privacyTogglers].forEach(toggler => {
+            toggler.addEventListener("change", (e) => {
+                const key = e.target.dataset['key'];
+                this.store.dispatch('togglePrivacyPreference', { key, value: e.target.checked }, this.initiator)
+            });
+        });
+    }
+
+    addManageHistoryLinkListener() {
+        const manageHistoryBtn = this.element.querySelector('button.cross-link-btn.manage-history-btn');
+        manageHistoryBtn && manageHistoryBtn.addEventListener('click', () =>
+            this.store.dispatch('openSidebar', { newPage: 'history' }));
+    }
+
     render() {
         const privacySettings = this.store.state.privacy;
         this.element.innerHTML = `
@@ -24,17 +40,8 @@ export default class PrivacySettingsComponent extends Component {
                 <button class="cross-link-btn manage-history-btn">Manage History</button>            
             </div>
         `;
-
-        const privacyTogglers = this.element.querySelectorAll("input[type='checkbox']");
-        [...privacyTogglers].forEach(toggler => {
-            toggler.addEventListener("change", (e) => {
-                const key = e.target.dataset['key'];
-                this.store.dispatch('togglePrivacyPreference', { key, value: e.target.checked }, this.initiator)
-            });
-        });
-
-        const manageHistoryBtn = this.element.querySelector('button.cross-link-btn.manage-history-btn');
-        manageHistoryBtn && manageHistoryBtn.addEventListener('click', () =>
-            this.store.dispatch('openSidebar', { newPage: 'history' }));
+        
+        this.addPrivacySettingsListeners();
+        this.addManageHistoryLinkListener();
     }
 }

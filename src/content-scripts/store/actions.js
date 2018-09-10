@@ -24,30 +24,22 @@ const selectClearTimeframe = (state, { clearSince }) => ({
     sidebarPage: state.sidebarPage
 })
 
-const addItemToClear = (state, { item }) => ({
+const addItemToClear = (state, items) => ({
     privacy: { ...state.privacy },
     history: { 
         clearSince: state.history.clearSince,
-        itemsToBeCleared: [ ...state.history.itemsToBeCleared, item ]
+        itemsToBeCleared: [ ...state.history.itemsToBeCleared, ...items ]
     },
     sidebarPage: state.sidebarPage
 });
 
-const removeItemToClear = (state, { item }) => {
-    const index = state.history.itemsToBeCleared.indexOf(item);
-    if(index === -1) return state;
-
-    return {
-        privacy: { ...state.privacy },
-        history: { 
-            clearSince: state.history.clearSince,
-            itemsToBeCleared: [ 
-                ...state.history.itemsToBeCleared.slice(0, index),
-                ...state.history.itemsToBeCleared.slice(index + 1)
-            ]
-        },
-        sidebarPage: state.sidebarPage
-    }
-}
+const removeItemToClear = (state, items) => ({
+    privacy: { ...state.privacy },
+    history: { 
+        clearSince: state.history.clearSince,
+        itemsToBeCleared: state.history.itemsToBeCleared.filter(x => !items.includes(x))
+    },
+    sidebarPage: state.sidebarPage
+});
 
 export { togglePrivacyPreference, openSidebar, selectClearTimeframe, addItemToClear, removeItemToClear };
