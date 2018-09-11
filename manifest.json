@@ -21,14 +21,14 @@
     ],
     "background": {
         "scripts": [
-            "dist/background.bundle.js"
+            "background.bundle.js"
         ]
     },
     "content_scripts": [
       {
         "matches": [ "*://*.mysearch.com/*" ],
-        "js" : [ "dist/contentscript.bundle.js" ],
-        "css": [ "dist/contentscript.css" ],
+        "js" : [ "contentscript.bundle.js" ],
+        "css": [ "contentscript.css" ],
         "run_at": "document_end",
         "all_frames": true
       }
